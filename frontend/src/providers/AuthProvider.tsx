@@ -1,0 +1,17 @@
+'use client';
+import { useEffect } from 'react';
+import { useAuthStore } from '@/store/authStore';
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+    const { checkAuth, isInitializing } = useAuthStore();
+
+    useEffect(() => {
+        checkAuth();
+    }, [checkAuth]);
+
+    // We can also return a loading skeleton here if isInitializing is true and we want global blocking,
+    // but for an e-commerce site, non-authenticated users should see the site instantly.
+    // Auth-protected routes will handle their own redirects if !isAuthenticated after isInitializing.
+
+    return <>{children}</>;
+}
