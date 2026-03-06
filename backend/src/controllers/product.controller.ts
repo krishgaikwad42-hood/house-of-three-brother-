@@ -29,8 +29,14 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         if (mongoose.connection.readyState !== 1) {
             // Apply filtering to local products for better UX in offline mode
             let filteredLocal = [...localProducts];
-            if (mainCategory) filteredLocal = filteredLocal.filter(p => p.mainCategory === mainCategory);
-            if (subCategory && subCategory !== 'undefined') filteredLocal = filteredLocal.filter(p => p.subCategory === subCategory);
+            if (mainCategory) {
+                const searchCat = String(mainCategory).toUpperCase();
+                filteredLocal = filteredLocal.filter(p => p.mainCategory.toUpperCase() === searchCat);
+            }
+            if (subCategory && subCategory !== 'undefined') {
+                const searchSub = String(subCategory).toUpperCase();
+                filteredLocal = filteredLocal.filter(p => p.subCategory.toUpperCase() === searchSub);
+            }
 
             res.status(200).json({
                 success: true,
@@ -41,10 +47,16 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
             return;
         }
 
-        const [products, total] = await Promise.all([
+        let [products, total] = await Promise.all([
             Product.find(query).sort(sortOption).skip(skip).limit(Number(limit)),
             Product.countDocuments(query)
         ]);
+
+        // Fallback to local products if database is empty and no specific filtering is applied
+        if (products.length === 0 && !mainCategory && !subCategory && !search) {
+            products = localProducts.slice(0, Number(limit)) as any;
+            total = localProducts.length;
+        }
 
         res.status(200).json({
             success: true,

@@ -13,6 +13,7 @@ interface Product {
 export function FeaturedProducts() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchFeatured = async () => {
@@ -24,10 +25,15 @@ export function FeaturedProducts() {
                     const result = await res.json();
                     if (result.success) {
                         setProducts(result.data);
+                    } else {
+                        setError(result.message || 'Failed to load products');
                     }
+                } else {
+                    setError('Backend API unreachable');
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error fetching featured products:', error);
+                setError(error.message || 'Connection error');
             } finally {
                 setLoading(false);
             }
@@ -45,6 +51,15 @@ export function FeaturedProducts() {
                         <div key={i} className="aspect-[4/5] bg-gray-50 animate-pulse" />
                     ))}
                 </div>
+            </section>
+        );
+    }
+
+    if (error) {
+        return (
+            <section className="section-padding px-4 text-center">
+                <p className="text-red-500 uppercase tracking-widest text-xs font-bold">{error}</p>
+                <p className="text-gray-400 text-[10px] mt-2 italic">Home page products fallback</p>
             </section>
         );
     }

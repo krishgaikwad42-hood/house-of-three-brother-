@@ -17,6 +17,7 @@ interface Product {
 export function ProductGrid({ mainCategory, subCategory }: { mainCategory: string | null, subCategory: string | null }) {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -38,12 +39,17 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
                     if (result.success) {
                         setProducts(result.data);
                         return;
+                    } else {
+                        setError(result.message || 'Failed to load products');
                     }
+                } else {
+                    setError('Backend API is unreachable. Please ensure the server is running.');
                 }
 
                 setProducts([]);
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error fetching products:', error);
+                setError('Connection error: ' + (error.message || 'Check console'));
                 setProducts([]);
             } finally {
                 setLoading(false);
@@ -78,7 +84,12 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
                     transition={{ duration: 0.3 }}
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
                 >
-                    {products.length > 0 ? (
+                    {error ? (
+                        <div className="col-span-full py-20 text-center border border-dashed border-red-200 bg-red-50/30">
+                            <p className="text-red-500 uppercase tracking-[0.2em] text-[10px] font-bold">{error}</p>
+                            <p className="text-gray-400 text-[10px] mt-2 italic">Using http://localhost:5000/api/v1/products</p>
+                        </div>
+                    ) : products.length > 0 ? (
                         products.map((product) => {
                             const primaryImage = product.images.find(img => img.isPrimary)?.url || product.images[0]?.url;
                             const hasImage = !!primaryImage;

@@ -15,7 +15,7 @@ export const localProducts = [
             { size: 'L', available: true },
             { size: 'XL', available: true }
         ],
-        images: [{ url: '/images/lost-soul.jpg', alt: 'Lost Soul T-Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/lost-soul.jpg', alt: 'Lost Soul T-Shirt', isPrimary: true }],
         status: 'active'
     },
     {
@@ -28,7 +28,7 @@ export const localProducts = [
         subCategory: 'Oversize',
         price: 799,
         sizes: [{ size: 'M', available: true }, { size: 'L', available: true }],
-        images: [{ url: '/images/speed.jpg', alt: 'Speed T-Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/speed.jpg', alt: 'Speed T-Shirt', isPrimary: true }],
         status: 'active'
     },
     {
@@ -41,7 +41,7 @@ export const localProducts = [
         subCategory: 'Oversize',
         price: 899,
         sizes: [{ size: 'S', available: true }, { size: 'M', available: true }],
-        images: [{ url: '/images/better-days.jpg', alt: 'Better Days T-Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/better-days.jpg', alt: 'Better Days T-Shirt', isPrimary: true }],
         status: 'active'
     },
     {
@@ -54,7 +54,7 @@ export const localProducts = [
         subCategory: 'Oversize',
         price: 749,
         sizes: [{ size: 'L', available: true }, { size: 'XL', available: true }],
-        images: [{ url: '/images/purple-figure.jpg', alt: 'Purple Figure T-Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/purple-figure.jpg', alt: 'Purple Figure T-Shirt', isPrimary: true }],
         status: 'active'
     },
     {
@@ -67,7 +67,7 @@ export const localProducts = [
         subCategory: 'Oversize',
         price: 699,
         sizes: [{ size: 'M', available: true }, { size: 'XXL', available: true }],
-        images: [{ url: '/images/approach.jpg', alt: 'Approach T-Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/approach.jpg', alt: 'Approach T-Shirt', isPrimary: true }],
         status: 'active'
     },
 
@@ -82,7 +82,7 @@ export const localProducts = [
         subCategory: 'Full Sleeve Shirts',
         price: 1299,
         sizes: [{ size: 'M', available: true }, { size: 'L', available: true }],
-        images: [{ url: '/images/shirt-1.jpg', alt: 'Green Striped Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/shirt-1.jpg', alt: 'Green Striped Shirt', isPrimary: true }],
         status: 'active'
     },
     {
@@ -95,7 +95,7 @@ export const localProducts = [
         subCategory: 'Full Sleeve Shirts',
         price: 1399,
         sizes: [{ size: 'L', available: true }],
-        images: [{ url: '/images/shirt-2.jpg', alt: 'Blue Striped Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/shirt-2.jpg', alt: 'Blue Striped Shirt', isPrimary: true }],
         status: 'active'
     },
     {
@@ -108,7 +108,7 @@ export const localProducts = [
         subCategory: 'Full Sleeve Shirts',
         price: 1299,
         sizes: [{ size: 'S', available: true }, { size: 'M', available: true }],
-        images: [{ url: '/images/shirt-3.jpg', alt: 'Modern Blue Stripe', isPrimary: true }],
+        images: [{ url: '/images/products/shirt-3.jpg', alt: 'Modern Blue Stripe', isPrimary: true }],
         status: 'active'
     },
     {
@@ -121,7 +121,7 @@ export const localProducts = [
         subCategory: 'Full Sleeve Shirts',
         price: 1499,
         sizes: [{ size: 'M', available: true }, { size: 'XL', available: true }],
-        images: [{ url: '/images/shirt-4.jpg', alt: 'Black Floral Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/shirt-4.jpg', alt: 'Black Floral Shirt', isPrimary: true }],
         status: 'active'
     },
     {
@@ -134,7 +134,7 @@ export const localProducts = [
         subCategory: 'Full Sleeve Shirts',
         price: 1699,
         sizes: [{ size: 'L', available: true }, { size: 'XXL', available: true }],
-        images: [{ url: '/images/shirt-5.jpg', alt: 'Black Embroidered Shirt', isPrimary: true }],
+        images: [{ url: '/images/products/shirt-5.jpg', alt: 'Black Embroidered Shirt', isPrimary: true }],
         status: 'active'
     },
 
@@ -149,7 +149,7 @@ export const localProducts = [
         subCategory: 'Straight Fit',
         price: 1499,
         sizes: [{ size: 'M', available: true }, { size: 'L', available: true }],
-        images: [{ url: '/images/jeans-1.jpg', alt: 'Vintage Wash Jeans', isPrimary: true }],
+        images: [{ url: '/images/products/jeans-1.jpg', alt: 'Vintage Wash Jeans', isPrimary: true }],
         status: 'active'
     },
     {
@@ -162,7 +162,7 @@ export const localProducts = [
         subCategory: 'Straight Fit',
         price: 1599,
         sizes: [{ size: 'S', available: true }, { size: 'M', available: true }],
-        images: [{ url: '/images/jeans-2.jpg', alt: 'Classic Denim', isPrimary: true }],
+        images: [{ url: '/images/products/jeans-2.jpg', alt: 'Classic Denim', isPrimary: true }],
         status: 'active'
     },
     {
@@ -175,7 +175,7 @@ export const localProducts = [
         subCategory: 'Baggy',
         price: 1799,
         sizes: [{ size: 'L', available: true }, { size: 'XL', available: true }],
-        images: [{ url: '/images/jeans-3.jpg', alt: 'Light Wash Baggy Jeans', isPrimary: true }],
+        images: [{ url: '/images/products/jeans-3.jpg', alt: 'Light Wash Baggy Jeans', isPrimary: true }],
         status: 'active'
     },
     {
@@ -188,7 +188,7 @@ export const localProducts = [
         subCategory: 'Straight Fit',
         price: 1899,
         sizes: [{ size: 'M', available: true }],
-        images: [{ url: '/images/jeans-4.jpg', alt: 'Dark Navy Trousers', isPrimary: true }],
+        images: [{ url: '/images/products/jeans-4.jpg', alt: 'Dark Navy Trousers', isPrimary: true }],
         status: 'active'
     },
     {
@@ -201,7 +201,7 @@ export const localProducts = [
         subCategory: 'Straight Fit',
         price: 1699,
         sizes: [{ size: 'S', available: true }, { size: 'XL', available: true }],
-        images: [{ url: '/images/jeans-5.jpg', alt: 'Dark Wash Denim', isPrimary: true }],
+        images: [{ url: '/images/products/jeans-5.jpg', alt: 'Dark Wash Denim', isPrimary: true }],
         status: 'active'
     },
 
@@ -216,7 +216,7 @@ export const localProducts = [
         subCategory: '',
         price: 999,
         sizes: [{ size: 'M', available: true }, { size: 'L', available: true }],
-        images: [{ url: '/images/black-ribbed-polo.jpg', alt: 'Black Ribbed Polo', isPrimary: true }],
+        images: [{ url: '/images/products/black-ribbed-polo.jpg', alt: 'Black Ribbed Polo', isPrimary: true }],
         status: 'active'
     },
     {
@@ -229,7 +229,7 @@ export const localProducts = [
         subCategory: '',
         price: 1099,
         sizes: [{ size: 'L', available: true }, { size: 'XL', available: true }],
-        images: [{ url: '/images/cream-green-polo.jpg', alt: 'Cream Green Polo', isPrimary: true }],
+        images: [{ url: '/images/products/cream-green-polo.jpg', alt: 'Cream Green Polo', isPrimary: true }],
         status: 'active'
     },
     {
@@ -242,7 +242,7 @@ export const localProducts = [
         subCategory: '',
         price: 1199,
         sizes: [{ size: 'S', available: true }, { size: 'M', available: true }],
-        images: [{ url: '/images/cream-navy-polo.jpg', alt: 'Cream Navy Polo', isPrimary: true }],
+        images: [{ url: '/images/products/cream-navy-polo.jpg', alt: 'Cream Navy Polo', isPrimary: true }],
         status: 'active'
     },
     {
@@ -255,7 +255,7 @@ export const localProducts = [
         subCategory: '',
         price: 1099,
         sizes: [{ size: 'M', available: true }, { size: 'L', available: true }],
-        images: [{ url: '/images/navy-brown-polo.jpg', alt: 'Navy Brown Polo', isPrimary: true }],
+        images: [{ url: '/images/products/navy-brown-polo.jpg', alt: 'Navy Brown Polo', isPrimary: true }],
         status: 'active'
     },
     {
@@ -268,7 +268,7 @@ export const localProducts = [
         subCategory: '',
         price: 1299,
         sizes: [{ size: 'XL', available: true }, { size: 'XXL', available: true }],
-        images: [{ url: '/images/navy-knit-polo.jpg', alt: 'Navy Knit Polo', isPrimary: true }],
+        images: [{ url: '/images/products/navy-knit-polo.jpg', alt: 'Navy Knit Polo', isPrimary: true }],
         status: 'active'
     }
 ];
