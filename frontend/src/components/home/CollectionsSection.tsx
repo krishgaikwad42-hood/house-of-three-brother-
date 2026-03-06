@@ -9,6 +9,7 @@ export function CollectionsSection() {
                     <img
                         src="/images/essentials.png"
                         alt="The Essentials"
+                        loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 z-10" />
@@ -27,6 +28,7 @@ export function CollectionsSection() {
                     <img
                         src="/images/evening.png"
                         alt="Signature Polos"
+                        loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 z-10" />

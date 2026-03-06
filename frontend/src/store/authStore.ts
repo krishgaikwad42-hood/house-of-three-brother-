@@ -27,8 +27,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
     clearAuth: () => set({ user: null, isAuthenticated: false }),
 
     checkAuth: async () => {
+        // If no backend URL is configured, skip silently (guest user)
+        if (!process.env.NEXT_PUBLIC_API_URL) {
+            set({ user: null, isAuthenticated: false, isInitializing: false });
+            return;
+        }
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/auth/me`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/me`, {
                 credentials: 'include' // Important for passing httpOnly cookie
             });
             const data = await response.json();
