@@ -10,7 +10,7 @@ export const processCodOrder = async (req: Request, res: Response): Promise<void
         const order = await Order.findById(orderId);
 
         if (!order) {
-            res.status(404).json({ success: false, message: 'Order not found' });
+            res.status(200).json({ success: false, message: 'Order not found' });
             return;
         }
 
@@ -37,6 +37,6 @@ export const processCodOrder = async (req: Request, res: Response): Promise<void
         });
     } catch (error) {
         console.error('COD Order Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while processing COD order' });
+        res.status(200).json({ success: false, message: 'Server error while processing COD order' });
     }
 };

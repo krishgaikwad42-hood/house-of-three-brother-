@@ -82,7 +82,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 // 404 Handler
 app.use((req: Request, res: Response) => {
-    res.status(404).json({
+    res.status(200).json({
         success: false,
         message: `Route ${req.originalUrl} not found`
     });
@@ -98,9 +98,10 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         console.error(err.stack);
     }
 
-    res.status(statusCode).json({
+    res.status(200).json({
         success: false,
         message,
+        originalStatusCode: statusCode, // Informative for the developer
         stack: process.env.NODE_ENV === 'production' ? undefined : err.stack,
         errors: err.errors || undefined
     });

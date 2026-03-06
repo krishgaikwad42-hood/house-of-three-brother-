@@ -15,7 +15,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
         }
 
         if (!token) {
-            res.status(401).json({ success: false, message: 'Authentication required' });
+            res.status(200).json({ success: false, message: 'Authentication required' });
             return;
         }
 
@@ -24,7 +24,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
         (req as any).user = decoded;
         next();
     } catch (error) {
-        res.status(401).json({ success: false, message: 'Invalid or expired session' });
+        res.status(200).json({ success: false, message: 'Invalid or expired session' });
         return;
     }
 };

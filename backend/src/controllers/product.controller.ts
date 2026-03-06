@@ -57,7 +57,7 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         });
     } catch (error: any) {
         console.error('Get Products Error:', error);
-        res.status(500).json({ success: false, message: error.message || 'Server error' });
+        res.status(200).json({ success: false, message: error.message || 'Server error' });
     }
 };
 
@@ -68,18 +68,18 @@ export const getProductBySlug = async (req: Request, res: Response): Promise<voi
             if (localProduct) {
                 res.status(200).json({ success: true, data: localProduct, message: 'Offline mode' });
             } else {
-                res.status(404).json({ success: false, message: 'Product not found in offline mode' });
+                res.status(200).json({ success: false, message: 'Product not found in offline mode' });
             }
             return;
         }
         const product = await Product.findOne({ slug: req.params.slug, status: 'active' });
         if (!product) {
-            res.status(404).json({ success: false, message: 'Product not found' });
+            res.status(200).json({ success: false, message: 'Product not found' });
             return;
         }
         res.status(200).json({ success: true, data: product });
     } catch (error: any) {
-        res.status(500).json({ success: false, message: error.message || 'Server error' });
+        res.status(200).json({ success: false, message: error.message || 'Server error' });
     }
 };
 
@@ -116,7 +116,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
         res.status(201).json({ success: true, data: product });
     } catch (error: any) {
         console.error('Create Product Error:', error);
-        res.status(500).json({ success: false, message: error.message || 'Server error' });
+        res.status(200).json({ success: false, message: error.message || 'Server error' });
     }
 };
 
@@ -150,13 +150,13 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
 
         const product = await Product.findByIdAndUpdate(req.params.id, productData, { new: true });
         if (!product) {
-            res.status(404).json({ success: false, message: 'Product not found' });
+            res.status(200).json({ success: false, message: 'Product not found' });
             return;
         }
         res.status(200).json({ success: true, data: product });
     } catch (error: any) {
         console.error('Update Product Error:', error);
-        res.status(500).json({ success: false, message: error.message || 'Server error' });
+        res.status(200).json({ success: false, message: error.message || 'Server error' });
     }
 };
 
@@ -168,12 +168,12 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
         }
         const product = await Product.findByIdAndDelete(req.params.id);
         if (!product) {
-            res.status(404).json({ success: false, message: 'Product not found' });
+            res.status(200).json({ success: false, message: 'Product not found' });
             return;
         }
         res.status(200).json({ success: true, message: 'Product deleted' });
     } catch (error: any) {
-        res.status(500).json({ success: false, message: error.message || 'Server error' });
+        res.status(200).json({ success: false, message: error.message || 'Server error' });
     }
 };
 
@@ -205,6 +205,6 @@ export const searchProducts = async (req: Request, res: Response): Promise<void>
         res.status(200).json({ success: true, data: products });
     } catch (error: any) {
         console.error('Search Products Error:', error);
-        res.status(500).json({ success: false, message: 'Server error during search' });
+        res.status(200).json({ success: false, message: 'Server error during search' });
     }
 };

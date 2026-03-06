@@ -17,7 +17,7 @@ export const createRazorpayOrder = async (req: Request, res: Response): Promise<
         const order = await Order.findById(orderId);
 
         if (!order) {
-            res.status(404).json({ success: false, message: 'Order not found' });
+            res.status(200).json({ success: false, message: 'Order not found' });
             return;
         }
 
@@ -44,7 +44,7 @@ export const createRazorpayOrder = async (req: Request, res: Response): Promise<
         });
     } catch (error) {
         console.error('Razorpay Create Order Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while creating Razorpay order' });
+        res.status(200).json({ success: false, message: 'Server error while creating Razorpay order' });
     }
 };
 
@@ -69,7 +69,7 @@ export const verifyRazorpayPayment = async (req: Request, res: Response): Promis
             const order = await Order.findOne({ transactionId: razorpay_order_id });
 
             if (!order) {
-                res.status(404).json({ success: false, message: 'Order linked to this payment not found' });
+                res.status(200).json({ success: false, message: 'Order linked to this payment not found' });
                 return;
             }
 
@@ -86,6 +86,6 @@ export const verifyRazorpayPayment = async (req: Request, res: Response): Promis
         }
     } catch (error) {
         console.error('Razorpay Verify Payment Error:', error);
-        res.status(500).json({ success: false, message: 'Server error during payment verification' });
+        res.status(200).json({ success: false, message: 'Server error during payment verification' });
     }
 };

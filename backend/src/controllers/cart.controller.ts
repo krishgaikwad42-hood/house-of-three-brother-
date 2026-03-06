@@ -14,7 +14,7 @@ export const getCart = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ success: true, data: cart });
     } catch (error) {
         console.error('Get Cart Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while fetching cart' });
+        res.status(200).json({ success: false, message: 'Server error while fetching cart' });
     }
 };
 
@@ -50,7 +50,7 @@ export const syncCart = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ success: true, data: populatedCart });
     } catch (error) {
         console.error('Sync Cart Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while syncing cart' });
+        res.status(200).json({ success: false, message: 'Server error while syncing cart' });
     }
 };
 
@@ -61,6 +61,6 @@ export const clearCart = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ success: true, message: 'Cart cleared' });
     } catch (error) {
         console.error('Clear Cart Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while clearing cart' });
+        res.status(200).json({ success: false, message: 'Server error while clearing cart' });
     }
 };

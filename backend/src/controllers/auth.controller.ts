@@ -47,7 +47,7 @@ export const requestOtp = async (req: Request, res: Response): Promise<void> => 
         });
     } catch (error) {
         console.error('Request OTP Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while generating OTP' });
+        res.status(200).json({ success: false, message: 'Server error while generating OTP' });
     }
 };
 
@@ -96,7 +96,7 @@ export const requestAdminOtp = async (req: Request, res: Response): Promise<void
         });
     } catch (error) {
         console.error('Admin Request OTP Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while generating OTP' });
+        res.status(200).json({ success: false, message: 'Server error while generating OTP' });
     }
 };
 
@@ -139,7 +139,7 @@ export const verifyAdminOtp = async (req: Request, res: Response): Promise<void>
 
         if (!user) {
             await Otp.deleteOne({ _id: otpRecord._id });
-            res.status(403).json({ success: false, message: 'Access denied. Admin privileges required.' });
+            res.status(200).json({ success: false, message: 'Access denied. Admin privileges required.' });
             return;
         }
 
@@ -168,7 +168,7 @@ export const verifyAdminOtp = async (req: Request, res: Response): Promise<void>
         });
     } catch (error) {
         console.error('Admin Verify OTP Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while verifying OTP' });
+        res.status(200).json({ success: false, message: 'Server error while verifying OTP' });
     }
 };
 
@@ -252,7 +252,7 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
         });
     } catch (error) {
         console.error('Verify OTP Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while verifying OTP' });
+        res.status(200).json({ success: false, message: 'Server error while verifying OTP' });
     }
 };
 
@@ -306,6 +306,6 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
 
         res.status(200).json({ success: true, message: 'Logged out successfully' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error during logout' });
+        res.status(200).json({ success: false, message: 'Server error during logout' });
     }
 };

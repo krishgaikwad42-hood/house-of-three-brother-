@@ -22,7 +22,7 @@ export const createReview = async (req: Request, res: Response): Promise<void> =
             return;
         }
         console.error('Create Review Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while submitting review' });
+        res.status(200).json({ success: false, message: 'Server error while submitting review' });
     }
 };
 
@@ -36,7 +36,7 @@ export const getProductReviews = async (req: Request, res: Response): Promise<vo
         res.status(200).json({ success: true, data: reviews });
     } catch (error) {
         console.error('Get Product Reviews Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while fetching reviews' });
+        res.status(200).json({ success: false, message: 'Server error while fetching reviews' });
     }
 };
 
@@ -46,13 +46,13 @@ export const adminApproveReview = async (req: Request, res: Response): Promise<v
         const review = await Review.findByIdAndUpdate(reviewId, { isApproved: true }, { new: true });
 
         if (!review) {
-            res.status(404).json({ success: false, message: 'Review not found' });
+            res.status(200).json({ success: false, message: 'Review not found' });
             return;
         }
 
         res.status(200).json({ success: true, message: 'Review approved', data: review });
     } catch (error) {
         console.error('Approve Review Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while approving review' });
+        res.status(200).json({ success: false, message: 'Server error while approving review' });
     }
 };

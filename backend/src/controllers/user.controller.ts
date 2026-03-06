@@ -7,12 +7,12 @@ export const getProfile = async (req: Request, res: Response): Promise<void> => 
         const userId = (req as any).user?.id;
         const user = await User.findById(userId).select('-password');
         if (!user) {
-            res.status(404).json({ success: false, message: 'User not found' });
+            res.status(200).json({ success: false, message: 'User not found' });
             return;
         }
         res.status(200).json({ success: true, data: user });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(200).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -24,7 +24,7 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
 
         res.status(200).json({ success: true, data: user });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(200).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -33,7 +33,7 @@ export const addAddress = async (req: Request, res: Response): Promise<void> => 
         const userId = (req as any).user?.id;
         const user = await User.findById(userId);
         if (!user) {
-            res.status(404).json({ success: false, message: 'User not found' });
+            res.status(200).json({ success: false, message: 'User not found' });
             return;
         }
 
@@ -42,7 +42,7 @@ export const addAddress = async (req: Request, res: Response): Promise<void> => 
 
         res.status(201).json({ success: true, data: user.addresses });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(200).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -51,7 +51,7 @@ export const deleteAddress = async (req: Request, res: Response): Promise<void> 
         const userId = (req as any).user?.id;
         const user = await User.findById(userId);
         if (!user) {
-            res.status(404).json({ success: false, message: 'User not found' });
+            res.status(200).json({ success: false, message: 'User not found' });
             return;
         }
 
@@ -60,7 +60,7 @@ export const deleteAddress = async (req: Request, res: Response): Promise<void> 
 
         res.status(200).json({ success: true, data: user.addresses });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(200).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -70,6 +70,6 @@ export const getOrderHistory = async (req: Request, res: Response): Promise<void
         const orders = await Order.find({ user: userId }).sort({ createdAt: -1 });
         res.status(200).json({ success: true, data: orders });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(200).json({ success: false, message: 'Server error' });
     }
 };

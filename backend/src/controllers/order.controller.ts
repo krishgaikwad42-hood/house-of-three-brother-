@@ -32,7 +32,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
         for (const item of items) {
             const product = await Product.findById(item.product);
             if (!product) {
-                res.status(404).json({ success: false, message: `Product ${item.name} not found` });
+                res.status(200).json({ success: false, message: `Product ${item.name} not found` });
                 return;
             }
 
@@ -70,7 +70,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
         res.status(201).json({ success: true, data: order });
     } catch (error) {
         console.error('Create Order Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while creating order' });
+        res.status(200).json({ success: false, message: 'Server error while creating order' });
     }
 };
 
@@ -81,7 +81,7 @@ export const getMyOrders = async (req: Request, res: Response): Promise<void> =>
         res.status(200).json({ success: true, data: orders });
     } catch (error) {
         console.error('Get My Orders Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while fetching orders' });
+        res.status(200).json({ success: false, message: 'Server error while fetching orders' });
     }
 };
 
@@ -94,20 +94,20 @@ export const getOrderById = async (req: Request, res: Response): Promise<void> =
         const order = await Order.findById(id);
 
         if (!order) {
-            res.status(404).json({ success: false, message: 'Order not found' });
+            res.status(200).json({ success: false, message: 'Order not found' });
             return;
         }
 
         // Check ownership
         if (role !== 'admin' && order.user?.toString() !== userId) {
-            res.status(403).json({ success: false, message: 'Access denied' });
+            res.status(200).json({ success: false, message: 'Access denied' });
             return;
         }
 
         res.status(200).json({ success: true, data: order });
     } catch (error) {
         console.error('Get Order Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while fetching order' });
+        res.status(200).json({ success: false, message: 'Server error while fetching order' });
     }
 };
 
@@ -117,7 +117,7 @@ export const getAllOrders = async (req: Request, res: Response): Promise<void> =
         res.status(200).json({ success: true, data: orders });
     } catch (error) {
         console.error('Get All Orders Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while fetching all orders' });
+        res.status(200).json({ success: false, message: 'Server error while fetching all orders' });
     }
 };
 
@@ -133,7 +133,7 @@ export const getInvoice = async (req: Request, res: Response): Promise<void> => 
         const order = await Order.findById(id);
 
         if (!order) {
-            res.status(404).json({ success: false, message: 'Order not found' });
+            res.status(200).json({ success: false, message: 'Order not found' });
             return;
         }
 
@@ -142,6 +142,6 @@ export const getInvoice = async (req: Request, res: Response): Promise<void> => 
         res.send(html);
     } catch (error) {
         console.error('Invoice Error:', error);
-        res.status(500).json({ success: false, message: 'Server error generating invoice' });
+        res.status(200).json({ success: false, message: 'Server error generating invoice' });
     }
 };

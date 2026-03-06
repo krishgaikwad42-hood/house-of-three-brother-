@@ -9,7 +9,7 @@ export const getWishlist = async (req: Request, res: Response): Promise<void> =>
         res.status(200).json({ success: true, data: wishlist || { user: userId, products: [] } });
     } catch (error) {
         console.error('Get Wishlist Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while fetching wishlist' });
+        res.status(200).json({ success: false, message: 'Server error while fetching wishlist' });
     }
 };
 
@@ -34,6 +34,6 @@ export const toggleWishlist = async (req: Request, res: Response): Promise<void>
         res.status(200).json({ success: true, message: 'Wishlist updated', data: wishlist });
     } catch (error) {
         console.error('Toggle Wishlist Error:', error);
-        res.status(500).json({ success: false, message: 'Server error while updating wishlist' });
+        res.status(200).json({ success: false, message: 'Server error while updating wishlist' });
     }
 };
