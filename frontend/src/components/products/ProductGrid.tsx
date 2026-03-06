@@ -25,8 +25,25 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
         const fetchProducts = async () => {
             setLoading(true);
             setError(null);
+
+            // No backend configured — use local data immediately (no network call)
+            if (!process.env.NEXT_PUBLIC_API_URL) {
+                let filteredLocal = [...localProducts] as any[];
+                if (mainCategory) {
+                    const searchCat = String(mainCategory).toUpperCase();
+                    filteredLocal = filteredLocal.filter(p => p.mainCategory.toUpperCase() === searchCat);
+                }
+                if (subCategory) {
+                    const searchSub = String(subCategory).toUpperCase();
+                    filteredLocal = filteredLocal.filter(p => p.subCategory.toUpperCase() === searchSub);
+                }
+                setProducts(filteredLocal);
+                setLoading(false);
+                return;
+            }
+
             try {
-                let url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/products`;
+                let url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products`;
                 const params = new URLSearchParams();
                 if (mainCategory) params.set('mainCategory', mainCategory);
                 if (subCategory) params.set('subCategory', subCategory);
@@ -45,10 +62,8 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
                     }
                 }
 
-                // Fallback to local data if API is unreachable or fails
-                console.warn('Backend API unreachable, falling back to local data');
+                // Fallback to local data if API is reachable but returned bad data
                 let filteredLocal = [...localProducts] as any[];
-
                 if (mainCategory) {
                     const searchCat = String(mainCategory).toUpperCase();
                     filteredLocal = filteredLocal.filter(p => p.mainCategory.toUpperCase() === searchCat);
@@ -57,11 +72,9 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
                     const searchSub = String(subCategory).toUpperCase();
                     filteredLocal = filteredLocal.filter(p => p.subCategory.toUpperCase() === searchSub);
                 }
-
                 setProducts(filteredLocal);
-                if (!res) {
-                    setError('Running in Offline Mode: Backend API is unreachable.');
-                }
+                setError('RUNNING IN OFFLINE MODE: BACKEND API IS UNREACHABLE.');
+
             } catch (err: any) {
                 console.error('Error fetching products:', err);
                 setProducts(localProducts as any);

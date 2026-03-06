@@ -18,8 +18,14 @@ export function FeaturedProducts() {
 
     useEffect(() => {
         const fetchFeatured = async () => {
+            // No backend configured — use local data immediately (no network call)
+            if (!process.env.NEXT_PUBLIC_API_URL) {
+                setProducts(localProducts.slice(0, 4) as any);
+                setLoading(false);
+                return;
+            }
             try {
-                const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/products?limit=4`;
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/products?limit=4`;
                 const res = await fetch(url).catch(() => null);
 
                 if (res && res.ok) {
@@ -31,11 +37,9 @@ export function FeaturedProducts() {
                 }
 
                 // Fallback
-                console.warn('Featured API unreachable, using local fallback');
                 setProducts(localProducts.slice(0, 4) as any);
                 if (!res) setError('Offline Mode');
             } catch (error: any) {
-                console.error('Error fetching featured products:', error);
                 setProducts(localProducts.slice(0, 4) as any);
                 setError('Offline Mode');
             } finally {
