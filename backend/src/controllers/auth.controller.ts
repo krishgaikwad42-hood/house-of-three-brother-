@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.model';
 import Otp from '../models/Otp.model';
 import { generateAccessToken } from '../utils/token';
@@ -257,11 +258,25 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
 
 export const getMe = async (req: Request, res: Response): Promise<void> => {
     try {
-        const authReq = req as any; // Cast safely for TS since authenticate middleware injects this
-        const user = await User.findById(authReq.user?.id).select('-__v');
+        // Read token from secure httpOnly cookie OR authorization header as fallback
+        let token = req.cookies?.token;
+
+        if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+
+        if (!token) {
+            // For /me endpoint, we return 200 with success: false for guest users
+            // This prevents red 401 errors in the developer console on every page load
+            res.status(200).json({ success: false, message: 'Not authenticated (Guest)' });
+            return;
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET || 'fallback_access_secret') as { id: string; role: string };
+        const user = await User.findById(decoded.id).select('-__v');
 
         if (!user) {
-            res.status(404).json({ success: false, message: 'User not found' });
+            res.status(200).json({ success: false, message: 'User not found' });
             return;
         }
 
@@ -276,7 +291,8 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
             }
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        // Even on token error (expired etc), return 200 with success: false for the /me check
+        res.status(200).json({ success: false, message: 'Session expired or invalid' });
     }
 };
 

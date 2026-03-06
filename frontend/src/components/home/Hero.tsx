@@ -1,38 +1,78 @@
+"use client";
 import Link from 'next/link';
 
 export function Hero() {
     return (
-        <section className="relative w-full h-[85vh] md:h-screen bg-black">
-            {/* Background Image with LCP optimization */}
-            <img
-                src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop"
-                alt="House of Three Brothers Campaign"
-                className="absolute inset-0 w-full h-full object-cover opacity-80 contrast-110 brightness-90 saturate-0"
-                fetchPriority="high"
-            />
-
-            {/* Content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 fade-in-section">
-                <h1 className="text-white text-[3rem] md:text-[5rem] font-bold uppercase tracking-[0.15em] leading-tight mb-6">
-                    House of Three Brothers
-                </h1>
-                <p className="text-[#EAEAEA] text-sm md:text-base font-medium tracking-[0.2em] uppercase mb-12 max-w-2xl">
-                    Minimal luxury editorial fashion aesthetic.
-                </p>
-                <Link
-                    href="/shop"
-                    className="h-[56px] bg-white text-black min-w-[200px] flex items-center justify-center uppercase tracking-[2px] text-[13px] font-bold transition-all duration-300 hover:bg-black hover:text-white border border-transparent hover:border-white"
-                >
-                    Explore Collection
-                </Link>
+        <section className="relative w-full h-screen bg-black overflow-hidden flex items-center justify-center">
+            {/* Storefront Background Image - Full Screen Cover */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="/images/storefront.jpg"
+                    alt="House of Three Brothers Storefront"
+                    className="w-full h-full object-cover object-center animate-subtle-zoom"
+                    onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                    }}
+                />
+                {/* Premium Dark Gradient Overlay (40-60% opacity for readability) */}
+                <div className="absolute inset-0 bg-black/50 z-10" />
             </div>
 
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 5v14M19 12l-7 7-7-7" />
-                </svg>
+            {/* Hero Content - Centered Vertically & Horizontally */}
+            <div className="relative z-20 text-center px-6 max-w-5xl mx-auto animate-fade-in">
+                <div className="space-y-6">
+                    <h1 className="text-white text-[2.5rem] md:text-[5.5rem] font-bold uppercase tracking-[0.25em] leading-tight drop-shadow-lg">
+                        HOUSE OF <span className="text-[#D4AF37]">THREE BROTHERS</span>
+                    </h1>
+
+                    <div className="flex items-center justify-center gap-6">
+                        <div className="h-[1px] w-8 md:w-16 bg-white/30" />
+                        <p className="text-white/90 text-xs md:text-sm font-bold uppercase tracking-[0.4em]">
+                            Premium Fashion Collection
+                        </p>
+                        <div className="h-[1px] w-8 md:w-16 bg-white/30" />
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-12">
+                        <Link
+                            href="/shop"
+                            className="group relative h-[60px] min-w-[200px] bg-[#D4AF37] text-white flex items-center justify-center uppercase tracking-[3px] text-[11px] font-black transition-all duration-500 hover:bg-white hover:text-black overflow-hidden shadow-xl"
+                        >
+                            <span className="relative z-10">Shop Now</span>
+                            <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                        </Link>
+
+                        <Link
+                            href="/collections"
+                            className="h-[60px] min-w-[200px] border-2 border-white/50 text-white flex items-center justify-center uppercase tracking-[3px] text-[11px] font-black transition-all duration-500 hover:bg-white hover:text-black backdrop-blur-md"
+                        >
+                            Explore Collection
+                        </Link>
+                    </div>
+                </div>
             </div>
+
+            {/* Premium Scroll Indicator */}
+            <div className="absolute bottom-10 flex flex-col items-center gap-4 z-20">
+                <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent animate-bounce" />
+            </div>
+
+            <style jsx>{`
+                @keyframes subtle-zoom {
+                    from { transform: scale(1.1); }
+                    to { transform: scale(1); }
+                }
+                @keyframes fade-in {
+                    from { opacity: 0; transform: translateY(30px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-subtle-zoom {
+                    animation: subtle-zoom 15s ease-out forwards;
+                }
+                .animate-fade-in {
+                    animation: fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+            `}</style>
         </section>
     );
 }

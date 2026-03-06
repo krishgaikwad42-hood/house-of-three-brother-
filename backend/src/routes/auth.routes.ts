@@ -52,7 +52,7 @@ router.post('/admin/verify-otp', [
 
 // ─── Session Routes ───────────────────────────────────────────────────
 // Get current user via Token stored in httpOnly Cookie
-router.get('/me', authenticate, getMe);
+router.get('/me', getMe);
 
 // Clear httpOnly cookie to logout
 router.post('/logout', authenticate, logout);

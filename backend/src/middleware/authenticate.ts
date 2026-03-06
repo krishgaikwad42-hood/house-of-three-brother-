@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-export interface AuthRequest extends Request {
-    user?: { id: string; role: string };
+export interface AuthenticatedRequest extends Request {
+    user: { id: string; role: string };
 }
 
-export const authenticate = (req: AuthRequest, res: Response, next: NextFunction): void => {
+export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
     try {
         // Read token from secure httpOnly cookie OR authorization header as fallback
         let token = req.cookies?.token;
@@ -21,7 +21,7 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
 
         const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET || 'fallback_access_secret') as { id: string; role: string };
 
-        req.user = decoded;
+        (req as any).user = decoded;
         next();
     } catch (error) {
         res.status(401).json({ success: false, message: 'Invalid or expired session' });

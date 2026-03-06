@@ -5,24 +5,22 @@ export interface IProduct extends Document {
     slug: string;
     description: string;
     shortDescription: string;
-    category: string;
+    mainCategory: string;
+    subCategory: string;
     price: number;
     compareAtPrice?: number;
-    stock: {
-        XS: number;
-        S: number;
-        M: number;
-        L: number;
-        XL: number;
-        XXL: number;
-    };
-    availableSizes: string[];
+    sizes: {
+        size: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL';
+        stock?: number;
+        available: boolean;
+    }[];
     images: { url: string; alt: string; isPrimary: boolean }[];
     tags: string[];
     status: 'draft' | 'active' | 'archived';
     instagramPostId?: string;
     instagramUrl?: string;
     seoData?: { title: string; description: string };
+    lowStockThreshold: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -33,18 +31,18 @@ const productSchema = new Schema<IProduct>(
         slug: { type: String, required: true, unique: true },
         description: { type: String, required: true },
         shortDescription: { type: String, maxlength: 160 },
-        category: { type: String, required: true },
+        mainCategory: { type: String, required: true },
+        subCategory: { type: String, required: true },
         price: { type: Number, required: true, min: 0 },
         compareAtPrice: { type: Number, min: 0 },
-        stock: {
-            XS: { type: Number, default: 0 },
-            S: { type: Number, default: 0 },
-            M: { type: Number, default: 0 },
-            L: { type: Number, default: 0 },
-            XL: { type: Number, default: 0 },
-            XXL: { type: Number, default: 0 },
-        },
-        availableSizes: [{ type: String }],
+        lowStockThreshold: { type: Number, default: 5 },
+        sizes: [
+            {
+                size: { type: String, required: true, enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] },
+                stock: { type: Number, default: 0, min: 0 },
+                available: { type: Boolean, default: true }
+            }
+        ],
         images: [
             {
                 url: { type: String, required: true },
@@ -65,7 +63,8 @@ const productSchema = new Schema<IProduct>(
 );
 
 productSchema.index({ slug: 1 });
-productSchema.index({ category: 1 });
+productSchema.index({ mainCategory: 1 });
+productSchema.index({ subCategory: 1 });
 productSchema.index({ status: 1 });
 
 export default mongoose.models.Product || mongoose.model<IProduct>('Product', productSchema);

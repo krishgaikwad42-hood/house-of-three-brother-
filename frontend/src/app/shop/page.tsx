@@ -1,12 +1,31 @@
+"use client"
+import { Suspense } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ProductGrid } from '@/components/products/ProductGrid';
 import { FilterSidebar } from '@/components/products/FilterSidebar';
 
-export default function ShopPage() {
+function ShopContent() {
+    const searchParams = useSearchParams();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const mainCategory = searchParams.get('mainCategory');
+    const subCategory = searchParams.get('subCategory');
+    const category = subCategory || mainCategory || 'All Products';
+
+    if (!mounted) return null;
+
     return (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
             <div className="flex flex-col md:flex-row justify-between items-baseline mb-8 border-b border-[#EAEAEA] pb-6">
-                <h1 className="text-[2rem] md:text-5xl font-normal uppercase tracking-[0.1em]">All Products</h1>
-                <p className="text-sm text-gray-500 uppercase tracking-widest mt-4 md:mt-0">12 Products</p>
+                <h1 className="text-[2rem] md:text-5xl font-normal uppercase tracking-[0.1em]">
+                    {category}
+                </h1>
+                <p className="text-sm text-gray-500 uppercase tracking-widest mt-4 md:mt-0">Products</p>
             </div>
 
             <div className="flex flex-col md:flex-row gap-12">
@@ -36,9 +55,17 @@ export default function ShopPage() {
                             <option>Sort: Price High to Low</option>
                         </select>
                     </div>
-                    <ProductGrid />
+                    <ProductGrid mainCategory={mainCategory} subCategory={subCategory} />
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading Shop...</div>}>
+            <ShopContent />
+        </Suspense>
     );
 }

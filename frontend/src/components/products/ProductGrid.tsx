@@ -1,49 +1,127 @@
 "use client"
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Mock data for initial UI build
-const mockProducts = [
-    { id: '1', name: 'OVERSIZED LINEN SHIRT', price: 4999, image: '/api/placeholder/400/500', slug: 'oversized-linen-shirt' },
-    { id: '2', name: 'TAILORED WOOL TROUSERS', price: 7999, image: '/api/placeholder/400/500', slug: 'tailored-wool-trousers' },
-    { id: '3', name: 'CASHMERE BLEND SWEATER', price: 12999, image: '/api/placeholder/400/500', slug: 'cashmere-blend-sweater' },
-    { id: '4', name: 'CLASSIC SILK SCARF', price: 2499, image: '/api/placeholder/400/500', slug: 'classic-silk-scarf' },
-    { id: '5', name: 'TEXTURED COTTON BLAZER', price: 15999, image: '/api/placeholder/400/500', slug: 'textured-cotton-blazer' },
-    { id: '6', name: 'MINIMALIST LEATHER BELT', price: 3499, image: '/api/placeholder/400/500', slug: 'minimalist-leather-belt' },
-];
+interface Product {
+    _id: string;
+    name: string;
+    price: number;
+    images: { url: string; alt: string; isPrimary: boolean }[];
+    slug: string;
+    mainCategory: string;
+    subCategory: string;
+    sizes: { size: string; stock: number; available: boolean }[];
+}
 
-export function ProductGrid() {
-    const [loading, setLoading] = useState(false);
+export function ProductGrid({ mainCategory, subCategory }: { mainCategory: string | null, subCategory: string | null }) {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    return (
-        <div className="fade-in-section">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-                {mockProducts.map((product) => (
-                    <Link key={product.id} href={`/products/${product.slug}`} className="group cursor-pointer block">
-                        <div className="premium-img-wrapper aspect-[4/5] object-cover mb-6">
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                className="premium-img"
-                            />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
-                        </div>
-                        <div className="space-y-1">
-                            <h3 className="text-[12px] font-bold uppercase tracking-[0.15em] text-[#111] line-clamp-1">
-                                {product.name}
-                            </h3>
-                            <p className="text-[13px] font-medium text-gray-600">₹{product.price.toLocaleString()}</p>
-                        </div>
-                    </Link>
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                let url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/products`;
+                const params = new URLSearchParams();
+                if (mainCategory) params.set('mainCategory', mainCategory);
+                if (subCategory) params.set('subCategory', subCategory);
+
+                if (params.toString()) {
+                    url += `?${params.toString()}`;
+                }
+
+                const res = await fetch(url).catch(() => null);
+
+                if (res && res.ok) {
+                    const result = await res.json();
+                    if (result.success) {
+                        setProducts(result.data);
+                        return;
+                    }
+                }
+
+                setProducts([]);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                setProducts([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [mainCategory, subCategory]);
+
+    if (loading) {
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 animate-pulse">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="space-y-4">
+                        <div className="aspect-[4/5] bg-gray-100" />
+                        <div className="h-4 bg-gray-100 w-2/3" />
+                        <div className="h-4 bg-gray-100 w-1/3" />
+                    </div>
                 ))}
             </div>
+        );
+    }
 
-            {/* Load More Trigger Area (Intersection Observer stub) */}
-            <div className="mt-16 flex justify-center">
-                <button className="h-[56px] border border-[#EAEAEA] px-12 md:px-16 uppercase tracking-[0.2em] text-[11px] font-bold text-[#111] hover:border-[#111] hover:bg-black hover:text-white transition-all duration-300">
-                    {loading ? 'Loading...' : 'Load More'}
-                </button>
-            </div>
+    return (
+        <div className="min-h-[400px]">
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={`${mainCategory}-${subCategory}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
+                >
+                    {products.length > 0 ? (
+                        products.map((product) => {
+                            const primaryImage = product.images.find(img => img.isPrimary)?.url || product.images[0]?.url;
+                            const hasImage = !!primaryImage;
+                            const isOutOfStock = product.sizes?.every(s => s.stock <= 0 || !s.available);
+
+                            return (
+                                <Link key={product._id} href={`/products/${product.slug}`} className="group cursor-pointer block relative">
+                                    <div className="premium-img-wrapper aspect-[4/5] overflow-hidden mb-6 bg-gray-50 relative group">
+                                        {hasImage ? (
+                                            <img
+                                                src={primaryImage}
+                                                alt={product.name}
+                                                className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${isOutOfStock ? 'opacity-60 grayscale-[0.5]' : ''}`}
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-[#888]">
+                                                <div className="w-8 h-[1px] bg-gray-300 mb-3" />
+                                                <span className="text-[9px] uppercase tracking-[0.3em] font-medium">No Image Available</span>
+                                            </div>
+                                        )}
+                                        {isOutOfStock && (
+                                            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-black shadow-sm">
+                                                Out of Stock
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <h3 className={`text-[12px] font-bold uppercase tracking-[0.15em] text-[#111] line-clamp-1 ${isOutOfStock ? 'opacity-50' : ''}`}>
+                                            {product.name}
+                                        </h3>
+                                        <p className={`text-[13px] font-medium text-gray-600 ${isOutOfStock ? 'opacity-50' : ''}`}>₹{product.price.toLocaleString()}</p>
+                                    </div>
+                                </Link>
+                            );
+                        })
+                    ) : (
+                        <div className="col-span-full py-20 text-center border border-dashed border-gray-200">
+                            <p className="text-gray-400 uppercase tracking-[0.2em] text-[10px] font-bold">No products found in this category.</p>
+                        </div>
+                    )}
+                </motion.div>
+            </AnimatePresence>
         </div>
     );
 }

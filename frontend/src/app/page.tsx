@@ -1,6 +1,5 @@
 import { Hero } from '@/components/home/Hero';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
-import { CollectionsSection } from '@/components/home/CollectionsSection';
 
 export default function Home() {
   return (
@@ -8,9 +7,6 @@ export default function Home() {
       <Hero />
       <div className="fade-in-section" style={{ animationDelay: '0.2s' }}>
         <FeaturedProducts />
-      </div>
-      <div className="fade-in-section" style={{ animationDelay: '0.4s' }}>
-        <CollectionsSection />
       </div>
 
       {/* Brand Story Snippet */}

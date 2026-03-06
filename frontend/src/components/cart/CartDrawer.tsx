@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export function CartDrawer() {
-    const { items, isOpen, setIsOpen, updateQuantity, removeItem, getSummary } = useCartStore();
+    const { items, isOpen, setIsOpen, updateQuantity, removeItem, getSummary, syncWithBackend } = useCartStore();
     const { subtotal } = getSummary();
     const [isMounted, setIsMounted] = useState(false);
 
@@ -61,8 +61,19 @@ export function CartDrawer() {
                     ) : (
                         items.map((item) => (
                             <div key={item.id} className="flex gap-4">
-                                <div className="w-24 h-32 flex-shrink-0 bg-gray-100 border border-[#EAEAEA]">
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                <div className="w-24 h-32 flex-shrink-0 bg-gray-100 border border-[#EAEAEA] relative overflow-hidden flex items-center justify-center">
+                                    {item.image ? (
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center text-[#888]">
+                                            <div className="w-6 h-[1px] bg-gray-300 mb-2" />
+                                            <span className="text-[8px] uppercase tracking-widest font-medium">No Image</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="flex-1 flex flex-col justify-between">
@@ -72,7 +83,10 @@ export function CartDrawer() {
                                                 {item.name}
                                             </h3>
                                             <button
-                                                onClick={() => removeItem(item.id)}
+                                                onClick={() => {
+                                                    removeItem(item.id);
+                                                    syncWithBackend();
+                                                }}
                                                 className="text-gray-400 hover:text-black transition-colors"
                                             >
                                                 <X className="w-4 h-4" />
@@ -85,14 +99,20 @@ export function CartDrawer() {
                                     <div className="flex items-center border border-[#EAEAEA] w-max">
                                         <button
                                             className="p-2 hover:bg-gray-50 transition-colors"
-                                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                            onClick={() => {
+                                                updateQuantity(item.id, item.quantity - 1);
+                                                syncWithBackend();
+                                            }}
                                         >
                                             <Minus className="w-3 h-3" />
                                         </button>
                                         <span className="w-8 text-center text-xs font-medium">{item.quantity}</span>
                                         <button
                                             className="p-2 hover:bg-gray-50 transition-colors"
-                                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                            onClick={() => {
+                                                updateQuantity(item.id, item.quantity + 1);
+                                                syncWithBackend();
+                                            }}
                                         >
                                             <Plus className="w-3 h-3" />
                                         </button>

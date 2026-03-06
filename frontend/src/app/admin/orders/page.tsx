@@ -1,57 +1,146 @@
-export default function AdminOrders() {
-    const orders = [
-        { id: '1042', customer: 'Arjun Menon', date: 'Oct 24, 2024', total: 12499, payment: 'Paid', status: 'Unfulfilled' },
-        { id: '1041', customer: 'Rohan Sharma', date: 'Oct 23, 2024', total: 4999, payment: 'Paid', status: 'Fulfilled' },
-        { id: '1040', customer: 'Siddharth Rao', date: 'Oct 22, 2024', total: 24998, payment: 'Refunded', status: 'Cancelled' },
-    ];
+"use client"
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { ShoppingCart, Search, Eye, Filter, Clock, CheckCircle, Truck, Package, XCircle } from 'lucide-react';
+
+interface Order {
+    _id: string;
+    orderNumber: string;
+    customer: { name: string, email: string };
+    total: number;
+    orderStatus: string;
+    paymentStatus: string;
+    createdAt: string;
+}
+
+export default function AdminOrdersPage() {
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+                const res = await fetch(`${apiUrl}/api/v1/orders`, {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await res.json();
+                if (result.success) {
+                    setOrders(result.data);
+                }
+            } catch (error) {
+                console.error('Error fetching admin orders:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
+    const filteredOrders = orders.filter(order =>
+        order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customer?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const getStatusIcon = (status: string) => {
+        switch (status) {
+            case 'pending': return <Clock className="w-3 h-3" />;
+            case 'confirmed': return <CheckCircle className="w-3 h-3" />;
+            case 'shipped': return <Truck className="w-3 h-3" />;
+            case 'delivered': return <Package className="w-3 h-3" />;
+            case 'cancelled': return <XCircle className="w-3 h-3" />;
+            default: return <Clock className="w-3 h-3" />;
+        }
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'pending': return 'bg-yellow-50 text-yellow-700 border-yellow-100';
+            case 'confirmed': return 'bg-blue-50 text-blue-700 border-blue-100';
+            case 'shipped': return 'bg-purple-50 text-purple-700 border-purple-100';
+            case 'delivered': return 'bg-green-50 text-green-700 border-green-100';
+            case 'cancelled': return 'bg-red-50 text-red-700 border-red-100';
+            default: return 'bg-gray-50 text-gray-700 border-gray-100';
+        }
+    };
+
+    if (loading) return <div className="p-20 text-center uppercase tracking-widest text-xs animate-pulse">Loading Orders...</div>;
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold uppercase tracking-widest mb-8">Orders</h1>
+        <div className="space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <h1 className="text-2xl font-bold uppercase tracking-widest text-[#111]">Order Management</h1>
+                    <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-2">Manage and track customer orders</p>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search Order / Customer"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="h-12 border border-[#EAEAEA] pl-12 pr-6 text-xs focus:border-black outline-none transition-all w-[300px]"
+                        />
+                    </div>
+                </div>
+            </div>
 
-            <div className="bg-white border border-[#EAEAEA] shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50 border-b border-[#EAEAEA]">
+            <div className="bg-white border border-[#EAEAEA] shadow-sm overflow-hidden text-[11px]">
+                <table className="w-full text-left">
+                    <thead className="bg-gray-50 border-b border-[#EAEAEA] uppercase tracking-widest font-bold text-gray-500">
+                        <tr>
+                            <th className="px-6 py-5">Order #</th>
+                            <th className="px-6 py-5">Customer</th>
+                            <th className="px-6 py-5">Total</th>
+                            <th className="px-6 py-5">Status</th>
+                            <th className="px-6 py-5">Payment</th>
+                            <th className="px-6 py-5">Date</th>
+                            <th className="px-6 py-5 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#F0F0F0]">
+                        {filteredOrders.length === 0 ? (
                             <tr>
-                                <th className="px-6 py-4 font-semibold uppercase tracking-widest text-xs text-gray-500">Order</th>
-                                <th className="px-6 py-4 font-semibold uppercase tracking-widest text-xs text-gray-500">Date</th>
-                                <th className="px-6 py-4 font-semibold uppercase tracking-widest text-xs text-gray-500">Customer</th>
-                                <th className="px-6 py-4 font-semibold uppercase tracking-widest text-xs text-gray-500">Total</th>
-                                <th className="px-6 py-4 font-semibold uppercase tracking-widest text-xs text-gray-500">Payment Status</th>
-                                <th className="px-6 py-4 font-semibold uppercase tracking-widest text-xs text-gray-500">Fulfillment</th>
-                                <th className="px-6 py-4 font-semibold uppercase tracking-widest text-xs text-gray-500 text-right">Actions</th>
+                                <td colSpan={7} className="px-6 py-20 text-center text-gray-400 uppercase tracking-widest font-medium">No orders found</td>
                             </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[#EAEAEA]">
-                            {orders.map((order) => (
-                                <tr key={order.id} className="hover:bg-gray-50 transition-colors cursor-pointer">
-                                    <td className="px-6 py-4 font-medium text-blue-600">#{order.id}</td>
-                                    <td className="px-6 py-4 text-gray-500">{order.date}</td>
-                                    <td className="px-6 py-4">{order.customer}</td>
-                                    <td className="px-6 py-4 font-medium">₹{order.total.toLocaleString()}</td>
-                                    <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 text-xs rounded ${order.payment === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                            }`}>
-                                            {order.payment}
+                        ) : (
+                            filteredOrders.map((order) => (
+                                <tr key={order._id} className="hover:bg-gray-50 transition-colors group">
+                                    <td className="px-6 py-5 font-bold">{order.orderNumber}</td>
+                                    <td className="px-6 py-5">
+                                        <p className="font-bold text-black">{order.customer?.name || 'Guest'}</p>
+                                        <p className="text-[10px] text-gray-400">{order.customer?.email}</p>
+                                    </td>
+                                    <td className="px-6 py-5 font-bold">₹{order.total.toLocaleString()}</td>
+                                    <td className="px-6 py-5">
+                                        <span className={`inline-flex items-center gap-2 px-3 py-1.5 border rounded-full font-bold uppercase tracking-tighter ${getStatusColor(order.orderStatus)}`}>
+                                            {getStatusIcon(order.orderStatus)}
+                                            {order.orderStatus}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`px-2 py-1 text-xs rounded ${order.status === 'Fulfilled' ? 'bg-blue-100 text-blue-800' :
-                                                order.status === 'Unfulfilled' ? 'bg-yellow-100 text-yellow-800' :
-                                                    'bg-red-100 text-red-800'
-                                            }`}>
-                                            {order.status}
+                                    <td className="px-6 py-5">
+                                        <span className={`uppercase font-bold tracking-widest ${order.paymentStatus === 'paid' ? 'text-green-600' : 'text-gray-400'}`}>
+                                            {order.paymentStatus}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <button className="text-gray-600 hover:text-black font-medium text-xs uppercase tracking-widest">View</button>
+                                    <td className="px-6 py-5 text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</td>
+                                    <td className="px-6 py-5 text-right">
+                                        <Link
+                                            href={`/admin/orders/${order._id}`}
+                                            className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded hover:bg-[#222] transition-colors font-bold uppercase tracking-widest"
+                                        >
+                                            <Eye className="w-3 h-3" /> View
+                                        </Link>
                                     </td>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            ))
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     );

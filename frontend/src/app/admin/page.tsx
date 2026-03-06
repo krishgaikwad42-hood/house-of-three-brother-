@@ -1,10 +1,12 @@
+import Link from 'next/link';
+
 export default function AdminDashboard() {
-    // Mock data for initial analytics load
+    // KPI Data (to be connected to real API later)
     const stats = [
-        { name: 'Total Revenue', value: '₹4,32,000', change: '+12.5%' },
-        { name: 'Orders', value: '142', change: '+5.2%' },
-        { name: 'Customers', value: '89', change: '+18.1%' },
-        { name: 'Avg. Order', value: '₹3,042', change: '-2.1%' }
+        { name: 'Total Revenue', value: '₹0', change: '0%' },
+        { name: 'Orders', value: '0', change: '0%' },
+        { name: 'Customers', value: '0', change: '0%' },
+        { name: 'Avg. Order', value: '₹0', change: '0%' }
     ];
 
     return (
@@ -31,21 +33,10 @@ export default function AdminDashboard() {
                 <div className="bg-white border border-[#EAEAEA] shadow-sm p-6">
                     <div className="flex justify-between items-center mb-6 border-b border-[#EAEAEA] pb-4">
                         <h3 className="text-lg font-bold uppercase tracking-widest">Recent Orders</h3>
-                        <button className="text-sm text-blue-600 hover:underline">View All</button>
+                        <Link href="/admin/orders" className="text-[10px] text-black font-bold uppercase tracking-widest hover:underline">View All</Link>
                     </div>
-                    <div className="space-y-4">
-                        {[1042, 1041, 1040, 1039, 1038].map(order => (
-                            <div key={order} className="flex justify-between items-center text-sm">
-                                <div>
-                                    <p className="font-medium">#{order}</p>
-                                    <p className="text-gray-500">2 hours ago</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-medium">₹12,499</p>
-                                    <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Paid</span>
-                                </div>
-                            </div>
-                        ))}
+                    <div className="flex flex-col items-center justify-center h-[200px] text-center">
+                        <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-300">No recent orders</p>
                     </div>
                 </div>
 
@@ -54,21 +45,8 @@ export default function AdminDashboard() {
                     <div className="flex justify-between items-center mb-6 border-b border-[#EAEAEA] pb-4">
                         <h3 className="text-lg font-bold uppercase tracking-widest">Top Products</h3>
                     </div>
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-16 bg-gray-100"></div>
-                            <div>
-                                <p className="text-sm font-semibold uppercase">Oversized Linen Shirt</p>
-                                <p className="text-xs text-gray-500">42 Sales this week</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-16 bg-gray-100"></div>
-                            <div>
-                                <p className="text-sm font-semibold uppercase">Tailored Wool Trousers</p>
-                                <p className="text-xs text-gray-500">28 Sales this week</p>
-                            </div>
-                        </div>
+                    <div className="flex flex-col items-center justify-center h-[200px] text-center">
+                        <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-gray-300">No data available</p>
                     </div>
                 </div>
             </div>

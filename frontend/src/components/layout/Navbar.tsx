@@ -4,25 +4,27 @@ import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 import { ShoppingBag, Search, User, X, Menu } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { SearchBar } from './SearchBar';
 
 export function Navbar() {
     const { toggleCart, getSummary } = useCartStore();
     const [mounted, setMounted] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    // Prevent body scroll when mobile menu is open
+    // Prevent body scroll when mobile menu or search is open
     useEffect(() => {
-        if (mobileMenuOpen) {
+        if (mobileMenuOpen || searchOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = '';
         }
         return () => { document.body.style.overflow = ''; };
-    }, [mobileMenuOpen]);
+    }, [mobileMenuOpen, searchOpen]);
 
     const { count } = getSummary();
 
@@ -68,7 +70,11 @@ export function Navbar() {
 
                     {/* Right: Actions */}
                     <div className="flex items-center justify-end gap-6 md:w-1/3">
-                        <button className="hidden md:block text-black hover:text-gray-600 transition-colors" suppressHydrationWarning>
+                        <button
+                            className="hidden md:block text-black hover:text-gray-600 transition-colors"
+                            onClick={() => setSearchOpen(true)}
+                            suppressHydrationWarning
+                        >
                             <Search className="w-5 h-5" />
                         </button>
                         <Link href="/account/login" className="hidden md:block text-black hover:text-gray-600 transition-colors">
@@ -91,6 +97,9 @@ export function Navbar() {
 
                 </div>
             </header>
+
+            {/* Search Bar Component */}
+            <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
             {/* Dark Overlay behind mobile menu */}
             <div

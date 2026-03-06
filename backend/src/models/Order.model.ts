@@ -17,15 +17,18 @@ export interface IOrder extends Document {
     items: IOrderItem[];
     shippingAddress: IAddress;
     billingAddress: IAddress;
-    paymentMethod: 'razorpay' | 'stripe';
+    paymentMethod: 'razorpay' | 'cod';
     paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
     transactionId?: string;
-    orderStatus: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+    orderStatus: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
     subtotal: number;
     shippingFee: number;
     discount: number;
     tax: number;
     total: number;
+    fullName: string;
+    mobile: string;
+    email: string;
     couponCode?: string;
     trackingNumber?: string;
     courierPartner?: string;
@@ -50,15 +53,18 @@ const orderSchema = new Schema<IOrder>(
         items: [orderItemSchema],
         shippingAddress: { type: Schema.Types.Mixed, required: true },
         billingAddress: { type: Schema.Types.Mixed, required: true },
-        paymentMethod: { type: String, enum: ['razorpay', 'stripe'], required: true },
+        paymentMethod: { type: String, enum: ['razorpay', 'cod'], required: true },
         paymentStatus: { type: String, enum: ['pending', 'paid', 'failed', 'refunded'], default: 'pending' },
         transactionId: { type: String },
-        orderStatus: { type: String, enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
+        orderStatus: { type: String, enum: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
         subtotal: { type: Number, required: true },
         shippingFee: { type: Number, required: true },
         discount: { type: Number, default: 0 },
         tax: { type: Number, required: true },
         total: { type: Number, required: true },
+        fullName: { type: String, required: true },
+        mobile: { type: String, required: true },
+        email: { type: String, required: true },
         couponCode: { type: String },
         trackingNumber: { type: String },
         courierPartner: { type: String },
