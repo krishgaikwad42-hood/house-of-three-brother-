@@ -58,16 +58,13 @@ export function Hero() {
             </div>
 
             <style jsx>{`
-                @keyframes subtle-zoom {
-                    from { transform: scale(1.1); }
-                    to { transform: scale(1); }
-                }
-                @keyframes fade-in {
-                    from { opacity: 0; transform: translateY(30px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
                 .animate-subtle-zoom {
-                    animation: subtle-zoom 15s ease-out forwards;
+                    animation: subtle-zoom 20s ease-out infinite alternate;
+                    filter: contrast(1.05) brightness(1.1);
+                }
+                @keyframes subtle-zoom {
+                    from { transform: scale(1); }
+                    to { transform: scale(1.05); }
                 }
                 .animate-fade-in {
                     animation: fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;

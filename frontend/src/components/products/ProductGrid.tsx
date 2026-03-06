@@ -97,7 +97,7 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
+                    className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-8 gap-y-8 md:gap-y-12"
                 >
                     {error && (
                         <div className="col-span-full py-4 mb-8 text-center border border-dashed border-amber-200 bg-amber-50/30">

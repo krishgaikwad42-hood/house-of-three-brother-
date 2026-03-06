@@ -28,7 +28,11 @@ const CATEGORIES: CategoryStructure[] = [
     }
 ];
 
-export function FilterSidebar() {
+interface FilterSidebarProps {
+    onSelect?: () => void;
+}
+
+export function FilterSidebar({ onSelect }: FilterSidebarProps) {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
@@ -74,6 +78,7 @@ export function FilterSidebar() {
         }
 
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
+        if (onSelect) onSelect();
     };
 
     if (!mounted) {

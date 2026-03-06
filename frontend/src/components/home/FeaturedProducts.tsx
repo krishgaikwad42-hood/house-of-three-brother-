@@ -76,7 +76,7 @@ export function FeaturedProducts() {
                 New Arrivals
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-10 md:gap-y-16">
                 {products.map((product) => {
                     const primaryImage = product.images.find(img => img.isPrimary)?.url || product.images[0]?.url;
                     const hasImage = !!primaryImage;
