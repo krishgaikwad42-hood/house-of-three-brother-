@@ -53,7 +53,7 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         ]);
 
         // Fallback to local products if database is empty and no specific filtering is applied
-        if (products.length === 0 && !mainCategory && !subCategory && !search) {
+        if (products.length === 0 && !mainCategory && !subCategory) {
             products = localProducts.slice(0, Number(limit)) as any;
             total = localProducts.length;
         }

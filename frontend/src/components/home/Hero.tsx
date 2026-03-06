@@ -7,7 +7,7 @@ export function Hero() {
             {/* Storefront Background Image - Full Screen Cover */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/images/storefront.jpg"
+                    src="/images/hero.png"
                     alt="House of Three Brothers Storefront"
                     className="w-full h-full object-cover object-center animate-subtle-zoom"
                     onError={(e) => {
