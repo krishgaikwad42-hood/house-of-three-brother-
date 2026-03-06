@@ -95,7 +95,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
         // Handle images from multer
         if (req.files && Array.isArray(req.files)) {
             const uploadedImages = req.files.map((file: any, index: number) => ({
-                url: `/uploads/${file.filename}`,
+                url: `/images/products/${file.filename}`,
                 alt: productData.name || 'Product Image',
                 isPrimary: index === 0 && !productData.images // Set first as primary if no images provided
             }));
@@ -131,7 +131,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
         // Handle images from multer
         if (req.files && Array.isArray(req.files)) {
             const uploadedImages = req.files.map((file: any) => ({
-                url: `/uploads/${file.filename}`,
+                url: `/images/products/${file.filename}`,
                 alt: productData.name || 'Product Image',
                 isPrimary: false
             }));
