@@ -2,6 +2,7 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
+import { localProducts } from '@/utils/localData';
 
 interface Product {
     _id: string;
@@ -24,6 +25,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     const [activeImage, setActiveImage] = useState(0);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
+    const [isOffline, setIsOffline] = useState(false);
 
     useEffect(() => {
         // Reset quantity when size changes
@@ -33,6 +35,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     useEffect(() => {
         const fetchProduct = async () => {
             setLoading(true);
+            setIsOffline(false);
             try {
                 const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/products/${slug}`;
                 const res = await fetch(url).catch(() => null);
@@ -45,10 +48,24 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                     }
                 }
 
-                setProduct(null);
+                // Fallback to local data
+                const localProd = localProducts.find(p => p.slug === slug);
+                if (localProd) {
+                    console.warn('Product API unreachable, using local fallback');
+                    setProduct(localProd as any);
+                    setIsOffline(true);
+                } else {
+                    setProduct(null);
+                }
             } catch (error) {
                 console.error('Error fetching product:', error);
-                setProduct(null);
+                const localProd = localProducts.find(p => p.slug === slug);
+                if (localProd) {
+                    setProduct(localProd as any);
+                    setIsOffline(true);
+                } else {
+                    setProduct(null);
+                }
             } finally {
                 setLoading(false);
             }
@@ -97,6 +114,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
     return (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+            {isOffline && (
+                <div className="mb-8 py-3 px-6 bg-amber-50 border border-dashed border-amber-200 text-amber-700 text-[10px] font-bold uppercase tracking-[0.2em] text-center">
+                    Running in Offline Mode: Displaying data from local cache
+                </div>
+            )}
             <nav className="text-[10px] text-gray-500 uppercase tracking-widest mb-8">
                 <Link href="/" className="hover:text-black transition-colors">Home</Link> /
                 <Link href="/shop" className="hover:text-black transition-colors"> Shop</Link> /

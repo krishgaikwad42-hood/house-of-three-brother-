@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { localProducts } from '@/utils/localData';
+
 interface Product {
     _id: string;
     name: string;
@@ -22,6 +24,7 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
+            setError(null);
             try {
                 let url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/products`;
                 const params = new URLSearchParams();
@@ -39,18 +42,30 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
                     if (result.success) {
                         setProducts(result.data);
                         return;
-                    } else {
-                        setError(result.message || 'Failed to load products');
                     }
-                } else {
-                    setError('Backend API is unreachable. Please ensure the server is running.');
                 }
 
-                setProducts([]);
-            } catch (error: any) {
-                console.error('Error fetching products:', error);
-                setError('Connection error: ' + (error.message || 'Check console'));
-                setProducts([]);
+                // Fallback to local data if API is unreachable or fails
+                console.warn('Backend API unreachable, falling back to local data');
+                let filteredLocal = [...localProducts] as any[];
+
+                if (mainCategory) {
+                    const searchCat = String(mainCategory).toUpperCase();
+                    filteredLocal = filteredLocal.filter(p => p.mainCategory.toUpperCase() === searchCat);
+                }
+                if (subCategory) {
+                    const searchSub = String(subCategory).toUpperCase();
+                    filteredLocal = filteredLocal.filter(p => p.subCategory.toUpperCase() === searchSub);
+                }
+
+                setProducts(filteredLocal);
+                if (!res) {
+                    setError('Running in Offline Mode: Backend API is unreachable.');
+                }
+            } catch (err: any) {
+                console.error('Error fetching products:', err);
+                setProducts(localProducts as any);
+                setError('Running in Offline Mode: Connection error.');
             } finally {
                 setLoading(false);
             }
@@ -84,12 +99,13 @@ export function ProductGrid({ mainCategory, subCategory }: { mainCategory: strin
                     transition={{ duration: 0.3 }}
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
                 >
-                    {error ? (
-                        <div className="col-span-full py-20 text-center border border-dashed border-red-200 bg-red-50/30">
-                            <p className="text-red-500 uppercase tracking-[0.2em] text-[10px] font-bold">{error}</p>
-                            <p className="text-gray-400 text-[10px] mt-2 italic">Using http://localhost:5000/api/v1/products</p>
+                    {error && (
+                        <div className="col-span-full py-4 mb-8 text-center border border-dashed border-amber-200 bg-amber-50/30">
+                            <p className="text-amber-700 uppercase tracking-[0.2em] text-[10px] font-bold">{error}</p>
+                            <p className="text-gray-400 text-[10px] mt-1 italic">Showing real product data from local cache.</p>
                         </div>
-                    ) : products.length > 0 ? (
+                    )}
+                    {products.length > 0 ? (
                         products.map((product) => {
                             const primaryImage = product.images.find(img => img.isPrimary)?.url || product.images[0]?.url;
                             const hasImage = !!primaryImage;

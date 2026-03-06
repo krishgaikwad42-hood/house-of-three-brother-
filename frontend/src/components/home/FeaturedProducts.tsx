@@ -1,6 +1,7 @@
 "use client"
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { localProducts } from '@/utils/localData';
 
 interface Product {
     _id: string;
@@ -25,15 +26,18 @@ export function FeaturedProducts() {
                     const result = await res.json();
                     if (result.success) {
                         setProducts(result.data);
-                    } else {
-                        setError(result.message || 'Failed to load products');
+                        return;
                     }
-                } else {
-                    setError('Backend API unreachable');
                 }
+
+                // Fallback
+                console.warn('Featured API unreachable, using local fallback');
+                setProducts(localProducts.slice(0, 4) as any);
+                if (!res) setError('Offline Mode');
             } catch (error: any) {
                 console.error('Error fetching featured products:', error);
-                setError(error.message || 'Connection error');
+                setProducts(localProducts.slice(0, 4) as any);
+                setError('Offline Mode');
             } finally {
                 setLoading(false);
             }
